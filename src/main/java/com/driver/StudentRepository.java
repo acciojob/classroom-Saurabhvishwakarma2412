@@ -12,7 +12,7 @@ public class StudentRepository {
 
     HashMap<String,Student> studentHashMap=new HashMap<>();
     HashMap<String,Teacher> teacherHashMap=new HashMap<>();
-    HashMap<Student,Teacher> mapDB=new HashMap<>();
+    HashMap<String,List<String>> mapDB=new HashMap<>();
 
     public void addStudent(Student student){
         studentHashMap.put(student.getName(),student);
@@ -21,7 +21,9 @@ public class StudentRepository {
         teacherHashMap.put(teacher.getName(),teacher);
     }
     public void addStudentTeacherPair(String student ,String teacher){
-        mapDB.put(studentHashMap.get(student),teacherHashMap.get(teacher));
+        List<String> slist=mapDB.containsKey(teacher)==true ?mapDB.get(teacher):new ArrayList<>();
+        slist.add(student);
+        mapDB.put(teacher,slist);
     }
     public Student getStudentByName(String name){
         return studentHashMap.get(name);
@@ -30,14 +32,7 @@ public class StudentRepository {
         return teacherHashMap.get(name);
     }
     public List<String> getStudentsByTeacherName(String name){
-        List<String> ansList=new ArrayList<>();
-        Teacher teacher=teacherHashMap.get(name);
-        for(Student obj: mapDB.keySet()){
-            if(mapDB.get(obj)==teacher){
-                ansList.add(obj.getName());
-            }
-        }
-        return ansList;
+        return mapDB.get(name);
     }
     public List<String> getAllStudents(){
         List<String> ansList=new ArrayList<>();
@@ -47,26 +42,26 @@ public class StudentRepository {
         return ansList;
     }
     public void deleteTeacherByName(String teacher){
-        Teacher teacherobj=teacherHashMap.get(teacher);
-        teacherHashMap.remove(teacher);
-        for(Student student:mapDB.keySet()){
-            if(mapDB.get(student)==teacherobj){
-                mapDB.remove(student);
-                studentHashMap.remove(student);
-            }
-        }
+       List<String> slist=mapDB.get(teacher);
+       for(String name:slist){
+           studentHashMap.remove(name);
+       }
+       teacherHashMap.remove(teacher);
+       mapDB.remove(teacher);
     }
     public void deleteAllTeachers() {
-       for(String teacher :teacherHashMap.keySet()){
-           Teacher teacherobj=teacherHashMap.get(teacher);
-           for(Student student: mapDB.keySet()){
-               if(mapDB.get(student)==teacherobj){
-                   mapDB.remove(student);
-                   studentHashMap.remove(student.getName());
-               }
-           }
-           teacherHashMap.remove(teacher);
-       }
+        for(String teacher:teacherHashMap.keySet()){
+            if(mapDB.containsKey(teacher)) {
+                List<String> stringList = mapDB.get(teacher);
+                for(String student:stringList) {
+                    if (studentHashMap.containsKey(student)){
+                       studentHashMap.remove(student);
+                    }
+                }
+                mapDB.remove(teacher);
+            }
+            teacherHashMap.remove(teacher);
+        }
     }
 
 }
