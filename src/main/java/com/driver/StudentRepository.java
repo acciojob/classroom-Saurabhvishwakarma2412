@@ -9,80 +9,64 @@ import java.util.List;
 @Repository
 public class StudentRepository {
 
-    ArrayList<Student> studentArrayList=new ArrayList<>();
-    ArrayList<Teacher> teacherArrayList=new ArrayList<>();
 
+    HashMap<String,Student> studentHashMap=new HashMap<>();
+    HashMap<String,Teacher> teacherHashMap=new HashMap<>();
     HashMap<Student,Teacher> mapDB=new HashMap<>();
 
-    public void addToStudArray(Student student){
-        studentArrayList.add(student);
+    public void addStudent(Student student){
+        studentHashMap.put(student.getName(),student);
     }
-    public  void addToTeachArray(Teacher teacher){
-        teacherArrayList.add(teacher);
+    public  void addTeacher(Teacher teacher){
+        teacherHashMap.put(teacher.getName(),teacher);
     }
-    public void repoPair(String student ,String teacher){
-        Student Sobj=getStud(student);
-        Teacher Tobj=getTeach(teacher);
-        mapDB.put(Sobj,Tobj);
+    public void addStudentTeacherPair(String student ,String teacher){
+        mapDB.put(studentHashMap.get(student),teacherHashMap.get(teacher));
     }
-    public Student getRepoStud(String name){
-        for(Student obj:mapDB.keySet()){
-            if(obj.getName().equals(name)){
-                return obj;
-            }
-        }
-        return null;
+    public Student getStudentByName(String name){
+        return studentHashMap.get(name);
     }
-    public Teacher getRepoTeach(String name){
-        for(Teacher obj: mapDB.values()){
-            if(name.equals(obj.getName())){
-                return obj;
-            }
-        }
-        return null;
+    public Teacher getTeacherByName(String name){
+        return teacherHashMap.get(name);
     }
-    public List<String> getStudListbyTname(String name){
+    public List<String> getStudentsByTeacherName(String name){
         List<String> ansList=new ArrayList<>();
+        Teacher teacher=teacherHashMap.get(name);
         for(Student obj: mapDB.keySet()){
-            if(mapDB.get(obj).getName().equals(name)){
+            if(mapDB.get(obj)==teacher){
                 ansList.add(obj.getName());
             }
         }
         return ansList;
     }
-    public List<String> getrepoAllStud(){
+    public List<String> getAllStudents(){
         List<String> ansList=new ArrayList<>();
-        for(Student obj:mapDB.keySet()){
-            ansList.add(obj.getName());
+        for(String student:studentHashMap.keySet()){
+            ansList.add(student);
         }
         return ansList;
     }
-    public void deletebytname(String teacher){
-        for(Student obj:mapDB.keySet()){
-            if(mapDB.get(obj).getName().equals(teacher)){
-               mapDB.remove(obj);
+    public void deleteTeacherByName(String teacher){
+        Teacher teacherobj=teacherHashMap.get(teacher);
+        teacherHashMap.remove(teacher);
+        for(Student student:mapDB.keySet()){
+            if(mapDB.get(student)==teacherobj){
+                mapDB.remove(student);
+                studentHashMap.remove(student);
             }
         }
     }
-    public void repoDeleteAll(){
-        for(Student obj:mapDB.keySet()){
-            mapDB.remove(obj);
-        }
+    public void deleteAllTeachers() {
+       for(String teacher :teacherHashMap.keySet()){
+           Teacher teacherobj=teacherHashMap.get(teacher);
+           for(Student student: mapDB.keySet()){
+               if(mapDB.get(student)==teacherobj){
+                   mapDB.remove(student);
+                   studentHashMap.remove(student.getName());
+               }
+           }
+           teacherHashMap.remove(teacher);
+       }
     }
-    public Student getStud(String s){
-        for(Student obj:studentArrayList){
-            if(s.equals(obj.getName())){
-                return obj;
-            }
-        }
-        return null;
-    }
-    public Teacher getTeach(String s){
-        for(Teacher obj:teacherArrayList){
-            if(s.equals(obj.getName())){
-                return obj;
-            }
-        }
-        return null;
-    }
+
 }

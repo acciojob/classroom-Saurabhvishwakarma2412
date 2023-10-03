@@ -11,33 +11,33 @@ public class StudentService {
     @Autowired
     public StudentRepository repoObj;
 
-    public void addStud(Student student) {
-        repoObj.addToStudArray(student);
+    public void addStudent(Student student) {
+        repoObj.addStudent(student);
     }
 
-    public void addTeach(Teacher teacher) {
-        repoObj.addToTeachArray(teacher);
+    public void addTeacher(Teacher teacher) {
+        repoObj.addTeacher(teacher);
     }
-    public void servicePair(String student,String teacher){
-        repoObj.repoPair(student,teacher);
+    public void addStudentTeacherPair(String student,String teacher){
+        repoObj.addStudentTeacherPair(student,teacher);
     }
-    public Student servicegetStudent(String name){
-        return repoObj.getRepoStud(name);
+    public Student getStudentByName(String name){
+        return repoObj.getStudentByName(name);
     }
-    public Teacher servicegetTecaher(String name){
-        return repoObj.getRepoTeach(name);
+    public Teacher getTeacherByName(String name){
+        return repoObj.getTeacherByName(name);
     }
-    public List<String> getStudentbytname(String name){
-        return repoObj.getStudListbyTname(name);
+    public List<String> getStudentsByTeacherName(String name){
+        return repoObj.getStudentsByTeacherName(name);
     }
-    public  List<String> servicegetAllStud(){
-        return repoObj.getrepoAllStud();
+    public  List<String> getAllStudents(){
+        return repoObj.getAllStudents();
     }
-    public void servicedeltebyTeacher( String teacher){
-        repoObj.deletebytname(teacher);
+    public void deleteTeacherByName( String teacher){
+        repoObj.deleteTeacherByName(teacher);
     }
-    public void servicedeleteAll(){
-        repoObj.repoDeleteAll();
+    public void deleteAllTeachers(){
+        repoObj.deleteAllTeachers();
     }
 
 }
